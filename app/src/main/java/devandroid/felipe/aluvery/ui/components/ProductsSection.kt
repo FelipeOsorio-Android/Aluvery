@@ -16,50 +16,41 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import devandroid.felipe.aluvery.R
 import devandroid.felipe.aluvery.model.ProductModel
+import devandroid.felipe.aluvery.sampledata.sampleProducts
 import java.math.BigDecimal
 
 @Composable
-fun ProductsSection() {
+fun ProductsSection(
+    title: String,
+    listProducts: List<ProductModel>
+) {
     Column {
         Text(
-            text = "Promoções",
-            Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+            text = title,
+            Modifier.padding(start = 16.dp, end = 16.dp),
             fontSize = 20.sp,
             fontWeight = FontWeight(400)
         )
         Row(
             Modifier
-                .padding(top = 8.dp, bottom = 16.dp)
+                .padding(top = 8.dp)
                 .fillMaxWidth()
                 .horizontalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            ProductItem(
-                ProductModel(
-                name = "Burger",
-                price = BigDecimal("14.99"),
-                image = R.drawable.burger
-            )
-            )
-            ProductItem(
-                ProductModel(
-                name = "Fries",
-                price = BigDecimal("19.99"),
-                image = R.drawable.fries
-            ))
-            ProductItem(
-                ProductModel(
-                name = "Pizza",
-                price = BigDecimal("10.99"),
-                image = R.drawable.pizza
-            ))
+            for (p in listProducts) {
+                ProductItem(product = p)
+            }
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ProductsSectionPreview() {
-    ProductsSection()
+private fun ProductsSectionPreview() {
+    ProductsSection(
+        title = "Promoções",
+        listProducts = sampleProducts
+    )
 }

@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -115,10 +114,10 @@ fun ProductItem(product: ProductModel) {
 
 @Preview(showBackground = true)
 @Composable
-fun ProductItemPreview() {
+private fun ProductItemPreview() {
     ProductItem(ProductModel(
         name = "Produto 1",
         price = BigDecimal("14.99"),
-        image = R.drawable.ic_launcher_background
+        image = R.drawable.placeholder
     ))
 }
