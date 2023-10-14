@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import devandroid.felipe.aluvery.ui.components.ProductItem
+import devandroid.felipe.aluvery.ui.components.ProductsSection
 import devandroid.felipe.aluvery.ui.theme.AluveryTheme
 
 class MainActivity : ComponentActivity() {
@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AluveryTheme {
                 Surface {
-                    ProductItem()
+                    ProductsSection()
                 }
             }
         }
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
 fun MainPreview() {
     AluveryTheme {
         Surface {
-            ProductItem()
+            ProductsSection()
         }
     }
 }
