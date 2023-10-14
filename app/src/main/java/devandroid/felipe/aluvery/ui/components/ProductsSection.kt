@@ -14,6 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import devandroid.felipe.aluvery.R
+import devandroid.felipe.aluvery.model.ProductModel
+import java.math.BigDecimal
 
 @Composable
 fun ProductsSection() {
@@ -32,9 +35,25 @@ fun ProductsSection() {
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            ProductItem()
-            ProductItem()
-            ProductItem()
+            ProductItem(
+                ProductModel(
+                name = "Burger",
+                price = BigDecimal("14.99"),
+                image = R.drawable.burger
+            )
+            )
+            ProductItem(
+                ProductModel(
+                name = "Fries",
+                price = BigDecimal("19.99"),
+                image = R.drawable.fries
+            ))
+            ProductItem(
+                ProductModel(
+                name = "Pizza",
+                price = BigDecimal("10.99"),
+                image = R.drawable.pizza
+            ))
         }
     }
 }
