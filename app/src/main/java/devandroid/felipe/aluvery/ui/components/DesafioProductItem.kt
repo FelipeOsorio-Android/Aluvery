@@ -30,8 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import devandroid.felipe.aluvery.R
-import devandroid.felipe.aluvery.ui.theme.Purple500
-import devandroid.felipe.aluvery.ui.theme.Teal200
+import devandroid.felipe.aluvery.ui.theme.Indigo400
+import devandroid.felipe.aluvery.ui.theme.Indigo500
 
 @Composable
 fun DesafioProductItem() {
@@ -51,7 +51,7 @@ fun DesafioProductItem() {
                     .background(
                         brush = Brush.verticalGradient(
                             listOf(
-                                Purple500, Teal200
+                                Indigo400, Indigo500
                             )
                         )
                     )
@@ -66,7 +66,7 @@ fun DesafioProductItem() {
                         .align(alignment = Alignment.Center)
                         .offset(x = 50.dp)
                         .clip(shape = CircleShape)
-                        .border(2.dp, color = Purple500, shape = CircleShape)
+                        .border(2.dp, color = Indigo500, shape = CircleShape)
 
                 )
             }

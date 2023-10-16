@@ -1,6 +1,5 @@
 package devandroid.felipe.aluvery.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,13 +27,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import devandroid.felipe.aluvery.R
 import devandroid.felipe.aluvery.extensions.toBrazilCurrency
 import devandroid.felipe.aluvery.model.ProductModel
-import devandroid.felipe.aluvery.ui.theme.Purple500
-import devandroid.felipe.aluvery.ui.theme.Teal200
+import devandroid.felipe.aluvery.ui.theme.AluveryTheme
+import devandroid.felipe.aluvery.ui.theme.Indigo400
+import devandroid.felipe.aluvery.ui.theme.Indigo500
 import java.math.BigDecimal
 
 @Composable
@@ -56,21 +58,23 @@ fun ProductItem(product: ProductModel) {
                     .background(
                         brush = Brush.horizontalGradient(
                             colors = listOf(
-                                Purple500, Teal200
+                                Indigo400,
+                                Indigo500
                             )
                         )
                     )
                     .fillMaxWidth()
             ) {
-                Image(
-                    painter = painterResource(id = product.image),
+                AsyncImage(
+                    model = product.image,
                     contentDescription = null,
                     Modifier
                         .size(imageSize)
                         .offset(y = imageSize / 2)
                         .clip(shape = CircleShape)
                         .align(BottomCenter),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.placeholder)
 
                 )
             }
@@ -97,7 +101,7 @@ fun ProductItem(product: ProductModel) {
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .background(color = Purple500)
+                        .background(color = Indigo500)
                         .padding(16.dp)
                 ) {
                     Text(
@@ -115,9 +119,14 @@ fun ProductItem(product: ProductModel) {
 @Preview(showBackground = true)
 @Composable
 private fun ProductItemPreview() {
-    ProductItem(ProductModel(
-        name = "Produto 1",
-        price = BigDecimal("14.99"),
-        image = R.drawable.placeholder
-    ))
+    AluveryTheme {
+        Surface {
+            ProductItem(
+                ProductModel(
+                    name = LoremIpsum(50).values.first(),
+                    price = BigDecimal("14.99")
+                )
+            )
+        }
+    }
 }
