@@ -40,8 +40,9 @@ import devandroid.felipe.aluvery.ui.theme.Indigo500
 import java.math.BigDecimal
 
 @Composable
-fun ProductItem(product: ProductModel) {
+fun ProductItem(product: ProductModel, modifier: Modifier = Modifier) {
     Surface(
+        modifier,
         shape = RoundedCornerShape(15.dp),
         shadowElevation = 4.dp
     ) {
