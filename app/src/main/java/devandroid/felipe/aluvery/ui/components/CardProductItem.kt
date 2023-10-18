@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import devandroid.felipe.aluvery.R
@@ -20,13 +21,14 @@ import devandroid.felipe.aluvery.extensions.toBrazilCurrency
 import devandroid.felipe.aluvery.model.ProductModel
 import devandroid.felipe.aluvery.sampledata.sampleProducts
 import devandroid.felipe.aluvery.ui.theme.Indigo400Light
+import java.math.BigDecimal
 
 @Composable
 fun CardProductItem(product: ProductModel, modifier: Modifier = Modifier) {
     Card(
         modifier
             .fillMaxWidth()
-            .heightIn(150.dp, 200.dp),
+            .heightIn(150.dp),
         elevation = 4.dp
     ) {
         Column {
@@ -48,6 +50,9 @@ fun CardProductItem(product: ProductModel, modifier: Modifier = Modifier) {
                 Text(text = product.name)
                 Text(text = product.price.toBrazilCurrency())
             }
+            product.description?.let {
+                Text(text = it, Modifier.padding(16.dp))
+            }
         }
 
     }
@@ -56,5 +61,10 @@ fun CardProductItem(product: ProductModel, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun CardProductItemPreview() {
-    CardProductItem(product = sampleProducts.random())
+    CardProductItem(product = ProductModel(
+        name = "Teste",
+        price = BigDecimal(14.99),
+        description = LoremIpsum(20).values.first()
+    )
+    )
 }
