@@ -9,6 +9,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,26 +26,57 @@ import devandroid.felipe.aluvery.ui.theme.AluveryTheme
 
 @Composable
 fun HomeScreen(
-    sections: Map<String, List<ProductModel>>
+    sections: Map<String, List<ProductModel>>,
+    listProducts: List<ProductModel>
 ) {
     Column(
         Modifier.fillMaxSize()
     ) {
-        SearchTextField()
+        var textValue by remember { mutableStateOf("") }
+
+        SearchTextField(searchText = textValue, onSearchChange = {
+            textValue = it
+        })
+
+        val productsFiltered = remember(textValue) {
+            when {
+                textValue.isNotBlank() -> {
+                    listProducts.filter {
+                        it.name.contains(
+                            textValue,
+                            false
+                        ) || it.description?.contains(
+                            textValue,
+                            false
+                        ) ?: false
+                    }
+                }
+
+                else -> {
+                    emptyList()
+                }
+            }
+        }
         LazyColumn(
             Modifier
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-//            items(sections.toList()) {
-//                ProductsSection(title = it.first, listProducts = it.second)
-//            }
-            items(sampleProducts) {
-                CardProductItem(product = it, Modifier.padding(horizontal = 16.dp))
+            when {
+                textValue.isNotBlank() -> {
+                    items(productsFiltered) {
+                        CardProductItem(product = it, Modifier.padding(horizontal = 16.dp))
+                    }
+                }
+
+                else -> {
+                    items(sections.toList()) {
+                        ProductsSection(title = it.first, listProducts = it.second)
+                    }
+                }
             }
         }
-
     }
 }
 
@@ -50,7 +85,7 @@ fun HomeScreen(
 private fun HomeScreenPreview() {
     AluveryTheme {
         Surface {
-            HomeScreen(sampleSections)
+            HomeScreen(sampleSections, sampleProducts)
         }
     }
 }
