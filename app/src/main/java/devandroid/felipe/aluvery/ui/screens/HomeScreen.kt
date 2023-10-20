@@ -84,7 +84,6 @@ fun HomeScreen(
                 }
             }
         }
-        ShopSection(listShop = listShop)
     }
 }
 
