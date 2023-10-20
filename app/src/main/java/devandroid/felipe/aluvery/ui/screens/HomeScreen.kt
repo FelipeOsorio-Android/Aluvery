@@ -17,17 +17,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import devandroid.felipe.aluvery.model.ProductModel
+import devandroid.felipe.aluvery.model.ShopModel
 import devandroid.felipe.aluvery.sampledata.sampleProducts
 import devandroid.felipe.aluvery.sampledata.sampleSections
+import devandroid.felipe.aluvery.sampledata.shopModelList
 import devandroid.felipe.aluvery.ui.components.CardProductItem
 import devandroid.felipe.aluvery.ui.components.ProductsSection
 import devandroid.felipe.aluvery.ui.components.SearchTextField
+import devandroid.felipe.aluvery.ui.components.ShopSection
 import devandroid.felipe.aluvery.ui.theme.AluveryTheme
 
 @Composable
 fun HomeScreen(
     sections: Map<String, List<ProductModel>>,
-    listProducts: List<ProductModel>
+    listProducts: List<ProductModel>,
+    listShop: List<ShopModel>
 ) {
     Column(
         Modifier.fillMaxSize()
@@ -74,9 +78,13 @@ fun HomeScreen(
                     items(sections.toList()) {
                         ProductsSection(title = it.first, listProducts = it.second)
                     }
+                    item {
+                        ShopSection(listShop = listShop)
+                    }
                 }
             }
         }
+        ShopSection(listShop = listShop)
     }
 }
 
@@ -85,7 +93,7 @@ fun HomeScreen(
 private fun HomeScreenPreview() {
     AluveryTheme {
         Surface {
-            HomeScreen(sampleSections, sampleProducts)
+            HomeScreen(sampleSections, sampleProducts, shopModelList)
         }
     }
 }

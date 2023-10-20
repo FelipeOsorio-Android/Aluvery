@@ -7,6 +7,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import devandroid.felipe.aluvery.sampledata.sampleProducts
 import devandroid.felipe.aluvery.sampledata.sampleSections
+import devandroid.felipe.aluvery.sampledata.shopModelList
 import devandroid.felipe.aluvery.ui.screens.HomeScreen
 import devandroid.felipe.aluvery.ui.theme.AluveryTheme
 
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
 fun App() {
     AluveryTheme {
         Surface {
-            HomeScreen(sampleSections, sampleProducts)
+            HomeScreen(sampleSections, sampleProducts, shopModelList)
         }
     }
 }
