@@ -1,4 +1,4 @@
-package devandroid.felipe.aluvery
+package devandroid.felipe.aluvery.ui.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun App() {
+private fun App() {
     AluveryTheme {
         Surface {
             HomeScreen(sampleSections, sampleProducts, shopModelList)

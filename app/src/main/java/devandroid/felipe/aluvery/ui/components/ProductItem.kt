@@ -125,7 +125,7 @@ private fun ProductItemPreview() {
             ProductItem(
                 ProductModel(
                     name = LoremIpsum(50).values.first(),
-                    price = BigDecimal("14.99")
+                    price = BigDecimal("10000")
                 )
             )
         }
