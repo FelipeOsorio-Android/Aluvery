@@ -41,17 +41,17 @@ import java.math.BigDecimal
 import java.util.regex.Pattern
 
 @Composable
-fun ProductFormScreen(modifier: Modifier = Modifier) {
+fun ProductFormScreen(modifier: Modifier = Modifier, onSaveClick: (ProductModel) -> Unit = {}) {
 
     var textUrl by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     val errorFieldPrice by remember(price) {
-        mutableStateOf(Pattern.matches("^[^,-]*\$", price))
+        mutableStateOf(price.contains(',') || price.contains('-'))
     }
     val validatePrice by remember(price) {
-        mutableStateOf(Pattern.matches("^\\d{1,3}[+.]\\d{1,3}[+.]\\d{1,2}\$", price))
+        mutableStateOf(Pattern.matches("^\\d{1,3}[+.]\\d{1,3}\$", price))
     }
 
     val buttonEnabled by remember(name, price) {
@@ -166,9 +166,9 @@ fun ProductFormScreen(modifier: Modifier = Modifier) {
                         }
                     }
                 },
-                isError = !errorFieldPrice
+                isError = errorFieldPrice
             )
-            if(!errorFieldPrice) {
+            if(errorFieldPrice) {
                 Text(
                     text = "Valor Invalido",
                     color = MaterialTheme.colors.error,
@@ -198,12 +198,13 @@ fun ProductFormScreen(modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
-                ProductModel(
+                val product = ProductModel(
                     name = name,
                     price = BigDecimal(price),
                     image = textUrl,
                     description = description
                 )
+                onSaveClick(product)
             },
             Modifier
                 .fillMaxWidth(),
