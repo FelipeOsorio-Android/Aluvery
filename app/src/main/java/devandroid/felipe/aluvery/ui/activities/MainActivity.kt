@@ -16,9 +16,7 @@ import androidx.compose.ui.Modifier
 import devandroid.felipe.aluvery.dao.ProductDao
 import devandroid.felipe.aluvery.sampledata.sampleCandies
 import devandroid.felipe.aluvery.sampledata.sampleDrinks
-import devandroid.felipe.aluvery.sampledata.sampleProducts
-import devandroid.felipe.aluvery.sampledata.sampleSections
-import devandroid.felipe.aluvery.sampledata.shopModelList
+import devandroid.felipe.aluvery.stateholders.HomeScreenUiState
 import devandroid.felipe.aluvery.ui.screens.HomeScreen
 import devandroid.felipe.aluvery.ui.theme.AluveryTheme
 
@@ -32,14 +30,13 @@ class MainActivity : ComponentActivity() {
             App(onFabClick = {
                 startActivity(Intent(this, ProductFormActivity::class.java))
             }) {
-
                 val sections = mapOf(
                     "Todos os Produtos" to dao.products(),
                     "Promoções" to sampleDrinks + sampleCandies,
                     "Doces" to sampleCandies,
                     "Bebidas" to sampleDrinks
                 )
-                HomeScreen(sections = sections, listProducts = dao.products(), listShop = shopModelList)
+                HomeScreen(HomeScreenUiState(sections), sections)
             }
         }
     }
