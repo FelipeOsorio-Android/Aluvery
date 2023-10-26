@@ -12,6 +12,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import devandroid.felipe.aluvery.dao.ProductDao
 import devandroid.felipe.aluvery.sampledata.sampleCandies
@@ -30,13 +31,21 @@ class MainActivity : ComponentActivity() {
             App(onFabClick = {
                 startActivity(Intent(this, ProductFormActivity::class.java))
             }) {
+
+                val daoProductsList = dao.products()
                 val sections = mapOf(
                     "Todos os Produtos" to dao.products(),
                     "Promoções" to sampleDrinks + sampleCandies,
                     "Doces" to sampleCandies,
                     "Bebidas" to sampleDrinks
                 )
-                HomeScreen(HomeScreenUiState(sections), sections)
+
+                val uiState = remember(daoProductsList) { HomeScreenUiState(
+                    sections = sections,
+                    daoProductList = daoProductsList
+                ) }
+
+                HomeScreen(uiState = uiState)
             }
         }
     }

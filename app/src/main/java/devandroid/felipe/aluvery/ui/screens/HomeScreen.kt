@@ -13,9 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import devandroid.felipe.aluvery.model.ProductModel
-import devandroid.felipe.aluvery.sampledata.sampleCandies
-import devandroid.felipe.aluvery.sampledata.sampleDrinks
 import devandroid.felipe.aluvery.stateholders.HomeScreenUiState
 import devandroid.felipe.aluvery.ui.components.CardProductItem
 import devandroid.felipe.aluvery.ui.components.ProductsSection
@@ -24,17 +21,15 @@ import devandroid.felipe.aluvery.ui.components.ShopSection
 import devandroid.felipe.aluvery.ui.theme.AluveryTheme
 
 @Composable
-fun HomeScreen(state: HomeScreenUiState, section: Map<String, List<ProductModel>>) {
+fun HomeScreen(uiState: HomeScreenUiState = HomeScreenUiState()) {
 
-    val uiState = remember { state }
     val filterProducts = remember(uiState.textValue) { uiState.productsFiltered }
+    val sections = uiState.sections
 
     Column(
         Modifier.fillMaxSize()
     ) {
-        SearchTextField(searchText = uiState.textValue, onSearchChange = {
-            uiState.textValue = it
-        })
+        SearchTextField(searchText = uiState.textValue, onSearchChange = uiState.onSearchChange)
 
         LazyColumn(
             Modifier
@@ -51,7 +46,7 @@ fun HomeScreen(state: HomeScreenUiState, section: Map<String, List<ProductModel>
                 }
 
                 else -> {
-                    items(section.toList()) {
+                    items(sections.toList()) {
                         ProductsSection(title = it.first, listProducts = it.second)
                     }
                     item {
@@ -68,19 +63,7 @@ fun HomeScreen(state: HomeScreenUiState, section: Map<String, List<ProductModel>
 private fun HomeScreenPreview() {
     AluveryTheme {
         Surface {
-            HomeScreen(HomeScreenUiState(
-                sections = mapOf(
-                    "Todos os Produtos" to emptyList(),
-                "Promoções" to sampleDrinks + sampleCandies,
-                "Doces" to sampleCandies,
-                "Bebidas" to sampleDrinks
-            )
-            ), mapOf(
-                "Todos os Produtos" to emptyList(),
-                "Promoções" to sampleDrinks + sampleCandies,
-                "Doces" to sampleCandies,
-                "Bebidas" to sampleDrinks
-            ))
+            HomeScreen(HomeScreenUiState())
         }
     }
 }
