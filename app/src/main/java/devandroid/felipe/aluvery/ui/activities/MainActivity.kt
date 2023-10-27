@@ -12,19 +12,24 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import devandroid.felipe.aluvery.dao.ProductDao
+import devandroid.felipe.aluvery.model.ProductModel
 import devandroid.felipe.aluvery.sampledata.sampleCandies
 import devandroid.felipe.aluvery.sampledata.sampleDrinks
+import devandroid.felipe.aluvery.sampledata.sampleProducts
 import devandroid.felipe.aluvery.stateholders.HomeScreenUiState
 import devandroid.felipe.aluvery.ui.screens.HomeScreen
 import devandroid.felipe.aluvery.ui.theme.AluveryTheme
 
 class MainActivity : ComponentActivity() {
-    
+
     private val dao by lazy { ProductDao() }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -33,19 +38,7 @@ class MainActivity : ComponentActivity() {
             }) {
 
                 val daoProductsList = dao.products()
-                val sections = mapOf(
-                    "Todos os Produtos" to dao.products(),
-                    "Promoções" to sampleDrinks + sampleCandies,
-                    "Doces" to sampleCandies,
-                    "Bebidas" to sampleDrinks
-                )
-
-                val uiState = remember(daoProductsList) { HomeScreenUiState(
-                    sections = sections,
-                    daoProductList = daoProductsList
-                ) }
-
-                HomeScreen(uiState = uiState)
+                HomeScreen(daoProductsList = daoProductsList)
             }
         }
     }
