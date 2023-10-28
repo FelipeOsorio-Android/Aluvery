@@ -12,17 +12,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import devandroid.felipe.aluvery.dao.ProductDao
-import devandroid.felipe.aluvery.model.ProductModel
-import devandroid.felipe.aluvery.sampledata.sampleCandies
-import devandroid.felipe.aluvery.sampledata.sampleDrinks
-import devandroid.felipe.aluvery.sampledata.sampleProducts
-import devandroid.felipe.aluvery.stateholders.HomeScreenUiState
 import devandroid.felipe.aluvery.ui.screens.HomeScreen
 import devandroid.felipe.aluvery.ui.theme.AluveryTheme
 
@@ -56,7 +47,7 @@ private fun App(
                     FloatingActionButton(onClick = { onFabClick() }) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = null)
                     }
-                }
+                },
             ) {
                 Box(modifier = Modifier.padding(it)) {
                     content()

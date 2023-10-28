@@ -19,10 +19,7 @@ class ProductFormActivity : ComponentActivity() {
         setContent {
             AluveryTheme {
                 Surface {
-                    ProductFormScreen(onSaveClick = {
-                        dao.save(it)
-                        finish()
-                    })
+                    ProductFormScreen()
                 }
             }
         }

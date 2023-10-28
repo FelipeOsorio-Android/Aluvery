@@ -37,26 +37,23 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import devandroid.felipe.aluvery.R
 import devandroid.felipe.aluvery.model.ProductModel
+import devandroid.felipe.aluvery.stateholders.ProductFormScreenUiState
 import java.math.BigDecimal
 import java.util.regex.Pattern
 
 @Composable
-fun ProductFormScreen(modifier: Modifier = Modifier, onSaveClick: (ProductModel) -> Unit = {}) {
+fun ProductFormScreen(
+    modifier: Modifier = Modifier,
+    uiState: ProductFormScreenUiState = ProductFormScreenUiState()
+) {
 
-    var textUrl by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("") }
-    var price by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    val errorFieldPrice by remember(price) {
-        mutableStateOf(price.contains(',') || price.contains('-'))
-    }
-    val validatePrice by remember(price) {
-        mutableStateOf(Pattern.matches("^\\d{1,3}[+.]\\d{1,3}\$", price))
-    }
+    val textUrl = uiState.textUrl
+    val name = uiState.name
+    val price = uiState.price
+    val description = uiState.description
+    val errorFieldValue = uiState.errorFieldValue
+    val buttonEnabled = uiState.buttonEnabled
 
-    val buttonEnabled by remember(name, price) {
-        mutableStateOf(name.isNotBlank() && price.isNotBlank() && validatePrice)
-    }
 
     Column(
         modifier
@@ -85,7 +82,7 @@ fun ProductFormScreen(modifier: Modifier = Modifier, onSaveClick: (ProductModel)
 
         OutlinedTextField(
             value = textUrl,
-            onValueChange = { textUrl = it },
+            onValueChange = { uiState.onChangeValue("url", it) },
             Modifier
                 .fillMaxWidth(),
             label = { Text(text = "Url") },
@@ -102,8 +99,8 @@ fun ProductFormScreen(modifier: Modifier = Modifier, onSaveClick: (ProductModel)
                 )
             },
             trailingIcon = {
-                if(textUrl.isNotBlank()) {
-                    IconButton(onClick = { textUrl = "" }) {
+                if (uiState.isShowCleanButton(textUrl)) {
+                    IconButton(onClick = { uiState.onCleanField("url") }) {
                         Icon(imageVector = Icons.Default.Close, contentDescription = null)
                     }
                 }
@@ -113,7 +110,7 @@ fun ProductFormScreen(modifier: Modifier = Modifier, onSaveClick: (ProductModel)
         Column {
             OutlinedTextField(
                 value = name,
-                onValueChange = { name = it },
+                onValueChange = { uiState.onChangeValue("name", it) },
                 Modifier
                     .fillMaxWidth(),
                 label = { Text(text = "Nome") },
@@ -126,8 +123,8 @@ fun ProductFormScreen(modifier: Modifier = Modifier, onSaveClick: (ProductModel)
                     )
                 },
                 trailingIcon = {
-                    if (name.isNotBlank()) {
-                        IconButton(onClick = { name = "" }) {
+                    if (uiState.isShowCleanButton(name)) {
+                        IconButton(onClick = { uiState.onCleanField("name") }) {
                             Icon(imageVector = Icons.Default.Close, contentDescription = null)
                         }
                     }
@@ -143,7 +140,7 @@ fun ProductFormScreen(modifier: Modifier = Modifier, onSaveClick: (ProductModel)
         Column {
             OutlinedTextField(
                 value = price,
-                onValueChange = { price = it },
+                onValueChange = { uiState.onChangeValue("price", it) },
                 Modifier
                     .fillMaxWidth(),
                 label = { Text(text = "Preço") },
@@ -160,15 +157,15 @@ fun ProductFormScreen(modifier: Modifier = Modifier, onSaveClick: (ProductModel)
                     )
                 },
                 trailingIcon = {
-                    if (price.isNotBlank()) {
-                        IconButton(onClick = { price = "" }) {
+                    if (uiState.isShowCleanButton(price)) {
+                        IconButton(onClick = { uiState.onCleanField("price") }) {
                             Icon(imageVector = Icons.Default.Close, contentDescription = null)
                         }
                     }
                 },
-                isError = errorFieldPrice
+                isError = errorFieldValue
             )
-            if(errorFieldPrice) {
+            if (errorFieldValue) {
                 Text(
                     text = "Valor Invalido",
                     color = MaterialTheme.colors.error,
@@ -183,8 +180,8 @@ fun ProductFormScreen(modifier: Modifier = Modifier, onSaveClick: (ProductModel)
         }
 
         OutlinedTextField(
-            value = description,
-            onValueChange = { description = it },
+            value = description ?: "",
+            onValueChange = { uiState.onChangeValue("description", it) },
             Modifier
                 .fillMaxWidth()
                 .heightIn(min = 100.dp),
@@ -197,15 +194,7 @@ fun ProductFormScreen(modifier: Modifier = Modifier, onSaveClick: (ProductModel)
         )
 
         Button(
-            onClick = {
-                val product = ProductModel(
-                    name = name,
-                    price = BigDecimal(price),
-                    image = textUrl,
-                    description = description
-                )
-                onSaveClick(product)
-            },
+            onClick = { uiState.onSaveClick },
             Modifier
                 .fillMaxWidth(),
             enabled = buttonEnabled
@@ -213,6 +202,87 @@ fun ProductFormScreen(modifier: Modifier = Modifier, onSaveClick: (ProductModel)
             Text(text = "Salvar")
         }
     }
+}
+
+@Composable
+fun ProductFormScreen() {
+    var textUrl by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var price by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+
+
+    val errorFieldValue by remember(price) {
+        mutableStateOf(price.contains(',') || price.contains('-'))
+    }
+
+    val validatePrice by remember(price) {
+        mutableStateOf(Pattern.matches("^\\d{1,3}[+.]\\d{1,2}\$", price))
+    }
+
+    val buttonEnabled by remember(name, price) {
+        mutableStateOf(name.isNotBlank() && price.isNotBlank() && validatePrice)
+    }
+
+    val product = remember(textUrl, name, price, description) {
+        ProductModel(
+            name = name,
+            price = if (price.isNotBlank()) BigDecimal(price) else BigDecimal.ZERO,
+            image = textUrl,
+            description = description
+        )
+    }
+
+
+    val uiState = remember(textUrl, name, price, description) {
+        ProductFormScreenUiState(
+            textUrl = textUrl,
+            name = name,
+            price = price,
+            description = description,
+            errorFieldValue = errorFieldValue,
+            buttonEnabled = buttonEnabled,
+            onChangeValue = { field, newValue ->
+                when (field) {
+                    "url" -> {
+                        textUrl = newValue
+                    }
+
+                    "name" -> {
+                        name = newValue
+                    }
+
+                    "price" -> {
+                        price = newValue
+                    }
+
+                    "description" -> {
+                        description = newValue
+                    }
+                }
+            },
+            onCleanField = {
+                when(it) {
+                    "url" -> {
+                        textUrl = ""
+                    }
+
+                    "name" -> {
+                        name = ""
+                    }
+
+                    "price" -> {
+                        price = ""
+                    }
+                }
+            },
+            onSaveClick = {
+
+            }
+        )
+    }
+
+    ProductFormScreen(uiState = uiState)
 }
 
 @Preview(showBackground = true)
