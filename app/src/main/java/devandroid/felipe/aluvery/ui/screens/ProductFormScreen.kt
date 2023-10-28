@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import devandroid.felipe.aluvery.R
+import devandroid.felipe.aluvery.dao.ProductDao
 import devandroid.felipe.aluvery.model.ProductModel
 import devandroid.felipe.aluvery.stateholders.ProductFormScreenUiState
 import java.math.BigDecimal
@@ -194,7 +195,7 @@ fun ProductFormScreen(
         )
 
         Button(
-            onClick = { uiState.onSaveClick },
+            onClick = uiState.onSaveClick,
             Modifier
                 .fillMaxWidth(),
             enabled = buttonEnabled
@@ -205,7 +206,8 @@ fun ProductFormScreen(
 }
 
 @Composable
-fun ProductFormScreen() {
+fun ProductFormScreen(dao: ProductDao) {
+
     var textUrl by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
@@ -216,21 +218,14 @@ fun ProductFormScreen() {
         mutableStateOf(price.contains(',') || price.contains('-'))
     }
 
+
+
     val validatePrice by remember(price) {
         mutableStateOf(Pattern.matches("^\\d{1,3}[+.]\\d{1,2}\$", price))
     }
 
     val buttonEnabled by remember(name, price) {
         mutableStateOf(name.isNotBlank() && price.isNotBlank() && validatePrice)
-    }
-
-    val product = remember(textUrl, name, price, description) {
-        ProductModel(
-            name = name,
-            price = if (price.isNotBlank()) BigDecimal(price) else BigDecimal.ZERO,
-            image = textUrl,
-            description = description
-        )
     }
 
 
@@ -262,7 +257,7 @@ fun ProductFormScreen() {
                 }
             },
             onCleanField = {
-                when(it) {
+                when (it) {
                     "url" -> {
                         textUrl = ""
                     }
@@ -277,7 +272,15 @@ fun ProductFormScreen() {
                 }
             },
             onSaveClick = {
+                val product =
+                    ProductModel(
+                        name = name,
+                        price = BigDecimal(price),
+                        image = textUrl,
+                        description = description
+                    )
 
+                dao.save(product)
             }
         )
     }
