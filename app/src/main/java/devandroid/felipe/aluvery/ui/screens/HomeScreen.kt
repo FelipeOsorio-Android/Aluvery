@@ -9,24 +9,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import devandroid.felipe.aluvery.model.ProductModel
-import devandroid.felipe.aluvery.sampledata.sampleCandies
-import devandroid.felipe.aluvery.sampledata.sampleDrinks
-import devandroid.felipe.aluvery.sampledata.sampleProducts
 import devandroid.felipe.aluvery.stateholders.HomeScreenUiState
 import devandroid.felipe.aluvery.ui.components.CardProductItem
 import devandroid.felipe.aluvery.ui.components.ProductsSection
 import devandroid.felipe.aluvery.ui.components.SearchTextField
 import devandroid.felipe.aluvery.ui.components.ShopSection
 import devandroid.felipe.aluvery.ui.theme.AluveryTheme
+import devandroid.felipe.aluvery.ui.viewmodels.HomeScreenViewModel
 
 @Composable
 fun HomeScreen(uiState: HomeScreenUiState = HomeScreenUiState()) {
@@ -68,46 +60,9 @@ fun HomeScreen(uiState: HomeScreenUiState = HomeScreenUiState()) {
 }
 
 @Composable
-fun HomeScreen(daoProductsList: List<ProductModel>) {
-    val sections = mapOf(
-        "Todos os Produtos" to daoProductsList,
-        "Promoções" to sampleDrinks + sampleCandies,
-        "Doces" to sampleCandies,
-        "Bebidas" to sampleDrinks
-    )
+fun HomeScreen(viewModel: HomeScreenViewModel) {
 
-    var textValue by rememberSaveable { mutableStateOf("") }
-
-    fun filterProducts() = { product: ProductModel ->
-        product.name.contains(
-            textValue,
-            true
-        ) || product.description?.contains(
-            textValue,
-            true
-        ) ?: false
-
-    }
-
-    val productsFiltered = remember(textValue, daoProductsList) {
-        if (textValue.isNotBlank()) {
-            sampleProducts.filter(filterProducts()) +
-                    daoProductsList.filter(filterProducts())
-        } else {
-            emptyList()
-        }
-    }
-
-    val uiState = remember(daoProductsList, textValue) {
-        HomeScreenUiState(
-            sections = sections,
-            productsFiltered = productsFiltered,
-            searchText = textValue,
-            onSearchChange = {
-                textValue = it
-            }
-        )
-    }
+    val uiState = viewModel.uiState
     HomeScreen(uiState)
 }
 

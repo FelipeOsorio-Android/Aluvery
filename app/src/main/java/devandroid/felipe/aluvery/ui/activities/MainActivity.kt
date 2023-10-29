@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -13,13 +14,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import devandroid.felipe.aluvery.dao.ProductDao
 import devandroid.felipe.aluvery.ui.screens.HomeScreen
 import devandroid.felipe.aluvery.ui.theme.AluveryTheme
+import devandroid.felipe.aluvery.ui.viewmodels.HomeScreenViewModel
 
 class MainActivity : ComponentActivity() {
 
-    private val dao by lazy { ProductDao() }
+    private val viewModel by viewModels<HomeScreenViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +29,7 @@ class MainActivity : ComponentActivity() {
                 startActivity(Intent(this, ProductFormActivity::class.java))
             }) {
 
-                val daoProductsList = dao.products()
-                HomeScreen(daoProductsList = daoProductsList)
+                HomeScreen(viewModel = viewModel)
             }
         }
     }
