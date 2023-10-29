@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -75,7 +76,7 @@ fun HomeScreen(daoProductsList: List<ProductModel>) {
         "Bebidas" to sampleDrinks
     )
 
-    var textValue by remember { mutableStateOf("") }
+    var textValue by rememberSaveable { mutableStateOf("") }
 
     fun filterProducts() = { product: ProductModel ->
         product.name.contains(

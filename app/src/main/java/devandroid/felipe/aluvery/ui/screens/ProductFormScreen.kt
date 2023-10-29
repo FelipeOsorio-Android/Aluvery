@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -208,10 +209,10 @@ fun ProductFormScreen(
 @Composable
 fun ProductFormScreen(dao: ProductDao) {
 
-    var textUrl by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("") }
-    var price by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    var textUrl by rememberSaveable { mutableStateOf("") }
+    var name by rememberSaveable { mutableStateOf("") }
+    var price by rememberSaveable { mutableStateOf("") }
+    var description by rememberSaveable { mutableStateOf("") }
 
 
     val errorFieldValue by remember(price) {
