@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import devandroid.felipe.aluvery.R
-import devandroid.felipe.aluvery.dao.ProductDao
 import devandroid.felipe.aluvery.model.ProductModel
 import devandroid.felipe.aluvery.stateholders.ProductFormScreenUiState
 import java.math.BigDecimal
@@ -207,7 +206,7 @@ fun ProductFormScreen(
 }
 
 @Composable
-fun ProductFormScreen(dao: ProductDao) {
+fun ProductFormScreen(onSaveClick: (product: ProductModel) -> Unit = {}) {
 
     var textUrl by rememberSaveable { mutableStateOf("") }
     var name by rememberSaveable { mutableStateOf("") }
@@ -281,7 +280,7 @@ fun ProductFormScreen(dao: ProductDao) {
                         description = description
                     )
 
-                dao.save(product)
+                onSaveClick(product)
             }
         )
     }

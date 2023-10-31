@@ -5,9 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import devandroid.felipe.aluvery.dao.ProductDao
 import devandroid.felipe.aluvery.ui.screens.ProductFormScreen
@@ -22,16 +19,10 @@ class ProductFormActivity : ComponentActivity() {
         setContent {
             AluveryTheme {
                 Surface {
-                    val listProduct by remember {
-                        mutableStateOf(dao.products())
-                    }
-
-                    if(listProduct.size != dao.products().size) {
-                        listProduct.toMutableList().add(dao.products().last())
+                    ProductFormScreen(onSaveClick = { product ->
+                        dao.save(product)
                         finish()
-                    } else {
-                        ProductFormScreen(dao)
-                    }
+                    })
                 }
             }
         }
