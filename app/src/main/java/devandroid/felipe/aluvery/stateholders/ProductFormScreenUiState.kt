@@ -1,6 +1,6 @@
 package devandroid.felipe.aluvery.stateholders
 
-class ProductFormScreenUiState(
+data class ProductFormScreenUiState(
     val textUrl: String = "",
     val name: String = "",
     val price: String = "",
@@ -9,7 +9,6 @@ class ProductFormScreenUiState(
     val buttonEnabled: Boolean = false,
     val onChangeValue: (field: String, newValue: String) -> Unit = {_, _ -> },
     val onCleanField: (String) -> Unit ={},
-    val onSaveClick: () -> Unit = {},
 ) {
 
     fun isShowCleanButton(textField: String) = textField.isNotBlank()

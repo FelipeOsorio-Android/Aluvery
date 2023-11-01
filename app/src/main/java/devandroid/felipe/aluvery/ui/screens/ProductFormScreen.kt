@@ -20,11 +20,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -37,15 +34,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import devandroid.felipe.aluvery.R
-import devandroid.felipe.aluvery.model.ProductModel
 import devandroid.felipe.aluvery.stateholders.ProductFormScreenUiState
-import java.math.BigDecimal
-import java.util.regex.Pattern
+import devandroid.felipe.aluvery.ui.viewmodels.ProductFormScreenViewModel
 
 @Composable
 fun ProductFormScreen(
     modifier: Modifier = Modifier,
-    uiState: ProductFormScreenUiState = ProductFormScreenUiState()
+    uiState: ProductFormScreenUiState = ProductFormScreenUiState(),
+    onSaveClick: () -> Unit = {}
 ) {
 
     val textUrl = uiState.textUrl
@@ -195,7 +191,7 @@ fun ProductFormScreen(
         )
 
         Button(
-            onClick = uiState.onSaveClick,
+            onClick = onSaveClick,
             Modifier
                 .fillMaxWidth(),
             enabled = buttonEnabled
@@ -206,86 +202,13 @@ fun ProductFormScreen(
 }
 
 @Composable
-fun ProductFormScreen(onSaveClick: (product: ProductModel) -> Unit = {}) {
+fun ProductFormScreen(viewModel: ProductFormScreenViewModel, onSaveClick: () -> Unit = {}) {
 
-    var textUrl by rememberSaveable { mutableStateOf("") }
-    var name by rememberSaveable { mutableStateOf("") }
-    var price by rememberSaveable { mutableStateOf("") }
-    var description by rememberSaveable { mutableStateOf("") }
-
-
-    val errorFieldValue by remember(price) {
-        mutableStateOf(price.contains(',') || price.contains('-'))
-    }
-
-
-
-    val validatePrice by remember(price) {
-        mutableStateOf(Pattern.matches("^\\d{1,3}[+.]\\d{1,2}\$", price))
-    }
-
-    val buttonEnabled by remember(name, price) {
-        mutableStateOf(name.isNotBlank() && price.isNotBlank() && validatePrice)
-    }
-
-
-    val uiState = remember(textUrl, name, price, description) {
-        ProductFormScreenUiState(
-            textUrl = textUrl,
-            name = name,
-            price = price,
-            description = description,
-            errorFieldValue = errorFieldValue,
-            buttonEnabled = buttonEnabled,
-            onChangeValue = { field, newValue ->
-                when (field) {
-                    "url" -> {
-                        textUrl = newValue
-                    }
-
-                    "name" -> {
-                        name = newValue
-                    }
-
-                    "price" -> {
-                        price = newValue
-                    }
-
-                    "description" -> {
-                        description = newValue
-                    }
-                }
-            },
-            onCleanField = {
-                when (it) {
-                    "url" -> {
-                        textUrl = ""
-                    }
-
-                    "name" -> {
-                        name = ""
-                    }
-
-                    "price" -> {
-                        price = ""
-                    }
-                }
-            },
-            onSaveClick = {
-                val product =
-                    ProductModel(
-                        name = name,
-                        price = BigDecimal(price),
-                        image = textUrl,
-                        description = description
-                    )
-
-                onSaveClick(product)
-            }
-        )
-    }
-
-    ProductFormScreen(uiState = uiState)
+    val uiState by viewModel.uiState.collectAsState()
+    ProductFormScreen(uiState = uiState, onSaveClick = {
+        viewModel.save()
+        onSaveClick()
+    })
 }
 
 @Preview(showBackground = true)
